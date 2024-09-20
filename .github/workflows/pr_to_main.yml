@@ -45,9 +45,9 @@ jobs:
       uses: ./.github/actions/dbt_full_run
 
     - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: ${{ env.BUILD_PATH }}/target
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ${{ env.BUILD_PATH }}/target
     
   deploy_documentation:
     name: "Deploy dbt documentation"
