@@ -1,0 +1,17 @@
+stages:
+  - install_dependencies
+  - dbt_seed_run_test
+  - deploy_documentation
+
+variables:
+  DBT_PROFILES_DIR: ./ci/prod
+
+default:
+  image: python
+
+install-dependencies:
+  stage: install_dependencies
+  script:
+    - pip install --upgrade --upgrade-strategy eager -r requirements.txt
+    - dbt deps
+    - dbt seed

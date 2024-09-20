@@ -1,0 +1,24 @@
+version: 2
+
+macros:
+  - name: clone_database
+    description: "Create a new database clone from a given source"
+    arguments:
+      - name: source_db
+        type: string
+        description: "Database to clone"
+
+      - name: target_db
+        type: string
+        description: "Target database name"
+
+  - name: create_database
+    description: "Create or recreate a (new) Database"
+    arguments:
+      - name: database_name
+        type: string
+        description: "Database name"
+
+      - name: recreate
+        type: boolean
+        description: "Set to true if the database should be recreated"

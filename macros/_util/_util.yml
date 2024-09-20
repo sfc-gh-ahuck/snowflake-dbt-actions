@@ -1,0 +1,10 @@
+version: 2
+
+macros:
+  - name: ref
+    description: Override of ref() macro to exclude database
+    docs:
+      show: false
+    arguments:
+      - name: model_name
+        type: string

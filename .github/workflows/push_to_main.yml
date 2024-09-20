@@ -1,0 +1,63 @@
+name: Push to Main Branch
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+env:
+  DBT_PROFILES_DIR: ./ci/prod
+
+  DBT_SNOWFLAKE_ACCOUNT: ${{ secrets.DBT_SNOWFLAKE_ACCOUNT }}
+  DBT_SNOWFLAKE_USER: ${{ secrets.DBT_SNOWFLAKE_USER }}
+  DBT_SNOWFLAKE_PASSWORD: ${{ secrets.DBT_SNOWFLAKE_PASSWORD }}
+  DBT_SNOWFLAKE_WAREHOUSE: ${{ secrets.DBT_SNOWFLAKE_WAREHOUSE }}
+  DBT_SNOWFLAKE_WAREHOUSE_PROD: ${{ secrets.DBT_SNOWFLAKE_WAREHOUSE_PROD }}
+  DBT_SCHEMA: ${{ secrets.DBT_SCHEMA }}
+  
+  DBT_DATABASE_PROD: ${{ secrets.DBT_DATABASE_PROD }}
+
+jobs:
+  dbt_seed_run_test:
+    name: "dbt seed, run & test"
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📬 Check out
+      uses: actions/checkout@v4
+
+    - name: 🧩 Install Python and required depencies
+      uses: ./.github/actions/install_dependencies
+    
+    - name: 📦 Run dbt actions
+      uses: ./.github/actions/dbt_full_run
+
+    - name: ♻️ Upload Artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: dbt-documentation
+        path: target
+
+  deploy_documentation:
+    name: "Deploy dbt documentation"
+    runs-on: ubuntu-latest
+    needs: dbt_seed_run_test
+
+    steps:
+    - name: 📬 Check out
+      uses: actions/checkout@v4
+    
+    - name: ♻️ Download Artifact
+      uses: actions/download-artifact@master
+      with:
+        name: dbt-documentation
+        path: target
+
+    - name: 📄 Deploy Documentation
+      uses: ./.github/actions/github-pages-deploy-action
+      with:
+        branch: gh-pages
+        folder: target
+        clean: true
+        clean-exclude: /pr/**

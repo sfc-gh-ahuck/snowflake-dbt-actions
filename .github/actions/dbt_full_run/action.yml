@@ -1,0 +1,37 @@
+name: dbt full run
+description: Install, seed, run, test and generate docs using dbt
+inputs:
+  test_sources:
+    description: 'Test Sources before running'
+    default: 'true'
+
+runs:
+  using: composite
+  steps:
+    - name: 📦 Install dbt dependencies
+      shell: bash
+      run: dbt deps
+
+    - name: ⚙️ Run dbt seed
+      shell: bash
+      run: dbt seed
+
+    - name: 🔍 Test dbt sources
+      shell: bash
+      run: |
+        if echo ${{ inputs.test_sources }} | grep -c "true"
+        then
+          dbt test --select source:*
+        fi
+
+    - name: ⚙️ Run dbt models
+      shell: bash
+      run: dbt run
+
+    - name: 🔍 Test dbt models
+      shell: bash
+      run: dbt test
+    
+    - name: ⚙️ Generate Documentation
+      shell: bash
+      run: dbt docs generate

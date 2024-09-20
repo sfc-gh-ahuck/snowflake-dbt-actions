@@ -1,0 +1,15 @@
+# For more information on how to configure this file, please see:
+# https://docs.getdbt.com/dbt-cli/configure-your-profile
+
+default:
+  target: ci
+  outputs:
+    ci:
+      type: snowflake
+      account: "{{ env_var('DBT_SNOWFLAKE_ACCOUNT') }}"
+      user: "{{ env_var('DBT_SNOWFLAKE_USER') }}"
+      password: "{{ env_var('DBT_SNOWFLAKE_PASSWORD') }}"
+      warehouse: "{{ env_var('DBT_SNOWFLAKE_WAREHOUSE', '') }}"
+      database: "{{ env_var('DBT_DATABASE_PROD') }}_ci_{{ env_var('CI_CONTEXT') }}"
+      schema: "{{ env_var('DBT_SCHEMA', 'demo') }}"
+      threads: 8
