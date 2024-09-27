@@ -36,4 +36,4 @@ jobs:
     - name: Upload documentation
       uses: actions/upload-pages-artifact@v3
       with:
-        path: ${{ env.BUILD_PATH }}/target
+        path: target
