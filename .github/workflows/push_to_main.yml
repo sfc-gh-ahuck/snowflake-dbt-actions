@@ -33,31 +33,7 @@ jobs:
     - name: 📦 Run dbt actions
       uses: ./.github/actions/dbt_full_run
 
-    - name: ♻️ Upload Artifact
-      uses: actions/upload-artifact@master
+    - name: Upload documentation
+      uses: actions/upload-pages-artifact@v3
       with:
-        name: dbt-documentation
-        path: target
-
-  deploy_documentation:
-    name: "Deploy dbt documentation"
-    runs-on: ubuntu-latest
-    needs: dbt_seed_run_test
-
-    steps:
-    - name: 📬 Check out
-      uses: actions/checkout@v4
-    
-    - name: ♻️ Download Artifact
-      uses: actions/download-artifact@master
-      with:
-        name: dbt-documentation
-        path: target
-
-    - name: 📄 Deploy Documentation
-      uses: ./.github/actions/github-pages-deploy-action
-      with:
-        branch: gh-pages
-        folder: target
-        clean: true
-        clean-exclude: /pr/**
+        path: ${{ env.BUILD_PATH }}/target
