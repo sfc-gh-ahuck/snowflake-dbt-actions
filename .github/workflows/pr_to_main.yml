@@ -56,7 +56,7 @@ jobs:
       id: deployment
       uses: actions/deploy-pages@v4
       with:
-        - preview: true
+        preview: true
 
     - name: ✅ maintain-comment
       uses: ./.github/actions/maintain-one-comment
