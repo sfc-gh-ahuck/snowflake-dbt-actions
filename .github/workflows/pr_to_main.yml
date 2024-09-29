@@ -59,7 +59,7 @@ jobs:
         preview: true
 
     - name: ✅ maintain-comment
-      uses: ./.github/actions/maintain-one-comment
+      uses: actions-cool/maintain-one-comment@v3
       with:
         token: ${{  github.token }}
         body: |
