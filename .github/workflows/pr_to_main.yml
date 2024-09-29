@@ -23,6 +23,7 @@ jobs:
     permissions:
       pages: write
       id-token: write
+
     steps:
     - name: 📬 Check out
       uses: actions/checkout@v4
@@ -51,12 +52,11 @@ jobs:
       with:
         path: ${{ github.workspace }}/target
     
-    - name: ☁️ Deploy preview
-      uses: rossjrw/pr-preview-action@v1
-      id: pages
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
       with:
-        source-dir: ./target/
-        umbrella-dir: pr
+        - preview: true
 
     - name: ✅ maintain-comment
       uses: ./.github/actions/maintain-one-comment
@@ -67,6 +67,6 @@ jobs:
           `${{ env.DBT_DATABASE_PROD }}_ci_${{ env.CI_CONTEXT }}`
           
           Here's a dbt docs for this Pull Request:
-          ${{ steps.pages.deployment-url }}
+          ${{ steps.deploument.page_url }}
         body-include: "Here's a preview:"
 
