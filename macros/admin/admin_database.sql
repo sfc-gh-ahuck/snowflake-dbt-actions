@@ -1,6 +1,6 @@
 {% macro clone_database(source_db, target_db, recreate=false, grant_all_to_role="") %}
     {% set sql -%}
-        CREATE DATABASE {% if not recreate -%}IF NOT EXISTS{% endif %} {{ target_db }} CLONE {{ source_db }};
+        CREATE {% if recreate -%}OR REPLACE DATABASE{% else -%}DATABASE IF NOT EXISTS{% endif -%}  {{ target_db }} CLONE {{ source_db }};
         
         {% if grant_all_to_role is defined and grant_all_to_role|length -%}
             GRANT all ON database {{ target_db }}                       to role {{ grant_all_to_role }};
