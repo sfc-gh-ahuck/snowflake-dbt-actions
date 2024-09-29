@@ -44,34 +44,17 @@ jobs:
     - name: 📦 Run dbt actions
       uses: ./.github/actions/dbt_full_run
 
-    - name: Upload artifact
+    - name: Upload documentation
       uses: actions/upload-pages-artifact@v3
       with:
-        path: ${{ env.BUILD_PATH }}/target
+        path: ${{ github.workspace }}/target
     
-  deploy_documentation:
-    name: "Deploy dbt documentation"
-    runs-on: ubuntu-latest
-    needs: dbt_seed_run_test
-
-    steps:
-    - name: 📬 Check out
-      uses: actions/checkout@v2
-    
-    - name: Extract branch name
-      run: |
-        echo "CI_CONTEXT=$(echo ${GITHUB_REF#refs/heads/} | sed 's/\//_/g')" >> $GITHUB_ENV;
-
-    - name: ♻️ Download Artifact
-      uses: actions/download-artifact@master
+    - name: ☁️ Deploy preview
+      uses: rossjrw/pr-preview-action@v1
+      id: pages
       with:
-        name: dbt-documentation
-        path: target
-
-     - name: Deploy preview
-        uses: rossjrw/pr-preview-action@v1
-        with:
-          source-dir: ./target/
+        source-dir: ./target/
+        umbrella-dir: pr
 
     - name: ✅ maintain-comment
       uses: ./.github/actions/maintain-one-comment
@@ -82,6 +65,6 @@ jobs:
           `${{ env.DBT_DATABASE_PROD }}_ci_${{ env.CI_CONTEXT }}`
           
           Here's a dbt docs for this Pull Request:
-          https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/pr/${{ env.CI_CONTEXT }}/index.html#!/overview
+          ${{ pages.deployment-url }}
         body-include: "Here's a preview:"
 
