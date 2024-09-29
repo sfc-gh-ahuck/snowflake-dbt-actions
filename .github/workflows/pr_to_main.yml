@@ -69,6 +69,5 @@ jobs:
           `${{ env.DBT_DATABASE_PROD }}_ci_${{ env.CI_CONTEXT }}`
           
           Here's a dbt docs for this Pull Request:
-          ${{ steps.deploument.page_url }}
-        body-include: "Here's a preview:"
+          ${{ steps.deployment.page_url }}
 
